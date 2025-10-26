@@ -1,6 +1,10 @@
-import React from 'react'
+import React ,{useState} from 'react'
+import axios from 'axios'
 
-const Login = () => {
+ export const backendURL = import.meta.env.VITE_BACKEND_URL;
+
+
+const Login = ({setToken}) => {
 
     const [email,setEmail]= useState('');
     const [password,setPassword]= useState('');
@@ -8,9 +12,16 @@ const Login = () => {
     const onSubmitHandler = async(e)=>{
         try {
             e.preventDefault();
-            
+            const response = await axios.post(backendURL + '/api/user/admin/login',{email,password});
+            if(response.data.success){
+              setToken(response.data.token)
+            }else{
+              toast.error(response.data.message);
+            }
         } catch (error) {
             
+            console.error(error);
+            toast.error(error.message);
         }
     }
 
